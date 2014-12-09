@@ -6,9 +6,11 @@
 #include <QDebug>
 #include <QList>
 #include <algorithm>
+#include "stdlib.h"
+#include "conio.h"
 
 #include "node.h"
-
+#include "functions.h"
 class HTree
 {
 private:
@@ -17,6 +19,9 @@ private:
     QString* m_listCodes;  // Array que contem os códigos dos bytes
     QByteArray m_treeCode;  //  Variável que contém a árvore codificada
     QByteArray m_fileCode;  //  Variável que contém o arquivo codificado
+    QByteArray m_sizeTrash;  //  Variável que contém o tamanho do lixo da árvore
+    QByteArray m_sizeTree;  // Variável que contém o tamanho da árvore
+    QByteArray m_fileOut;  // Variável que contém o arquivo comprimido
 
     void toString(Node *node, QString &str);  //  Função para imprimir a árvore
     void toHuffman(Node *node);  //  Função para setar a codificação da árvore e a lista dos códigos dos bytes
@@ -33,8 +38,12 @@ public:
     void toRight();  // Faz o cursor se deslocar para o nó da direita
     QString toString();  //  Retorna a árvore impressa
     void toHuffman();  //  Seta a codificação da árvore e seta o nosso listCodes
-    QByteArray getTreeCode(); //  Retorna a codificação da árvore.
+    QByteArray getTreeCode();  //  Retorna a codificação da árvore
     void encodingFile(QByteArray copyFiles);  //  Codifica o arquivo
+    QByteArray getFileCode();  //  Retorna a codificação do arquivo
+    QByteArray trashCode();  //  Retorna o lixo da codificação do arquivo e incrementa o codigo do arquivo
+    int sizeTree();  //  Retorna o tamanho da árvore
+    QByteArray finalCode(); // Retorna o código final do arquivo
 
 };
 

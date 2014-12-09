@@ -16,6 +16,8 @@
 
 bool lessthan(Node* x, Node* y);  //  Função que compara dois nós e retorna o com menor frequência
 
+QByteArray toHex(QByteArray binary);  //  Função que transforma um binário para hexadecimal
+
 Node* buildTree(int *count);  //  Função que cria a árvore e retorna sua raíz
 
 void compression();  //  Função que comprime o arquivo

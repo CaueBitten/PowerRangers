@@ -32,10 +32,15 @@ void HTree::toHuffman(Node *node){
     }
 }
 
-void HTree::toTree(Node *node)
-{
+//void HTree::toTree(Node *node)
+//{
+//    if(m_treeCode.at(0) == '*'){
+//        m_treeCode.remove(0,1);
+//    }
+//    else if(m_treeCode.at(0) == '('){
 
-}
+//    }
+//}
 
 HTree::HTree(){
     m_root = 0;
@@ -89,7 +94,76 @@ QByteArray HTree::getTreeCode(){
 void HTree::encodingFile(QByteArray copyFiles)
 {
     for(int i = 0; i < copyFiles.size(); i++){
-
+        m_fileCode.append(m_listCodes[copyFiles.at(i)]);
     }
+}
+
+QByteArray HTree::getFileCode()
+{
+    return m_fileCode;
+}
+
+QByteArray HTree::trashCode()
+{
+    int trash = (m_fileCode.size()+2)%8;
+    char aux[3];
+
+    itoa(trash, aux, 2);
+    m_sizeTrash.append(aux);
+
+    for(int i = 0; i < trash; i++){
+        m_fileCode.append('0');
+    }
+
+    return m_sizeTrash;
+}
+
+int HTree::sizeTree()
+{
+    char aux[13];
+    QByteArray tmp;
+    itoa(m_treeCode.size(), aux, 2);
+
+    m_sizeTree.append(aux);
+
+    for(int i = 0; i < 13 - m_sizeTree.size(); i++){
+        tmp.append("0");
+    }
+
+    tmp.append(m_sizeTree);
+    m_sizeTree = tmp;
+
+
+    return m_treeCode.size();
+}
+
+QByteArray HTree::finalCode()
+{
+    QByteArray aux;
+    QByteArray head;
+    QByteArray code;
+
+    m_sizeTrash.append(m_sizeTree);
+    for(int i = 0; i < 16; i += 4){
+        for(int j = 0; j < 4; j++){
+            aux.append(m_sizeTrash.at(j+i));
+        }
+        head.append(toHex(aux));
+        aux.clear();
+    }
+
+    for(int i = 0; i < m_fileCode.size(); i += 4){
+        for(int j = 0; j < 4; j++){
+            aux.append(m_fileCode.at(j+i));
+        }
+        code.append(toHex(aux));
+        aux.clear();
+    }
+
+    m_fileOut.append(head);
+    m_fileOut.append(m_treeCode);
+    m_fileOut.append(code);
+
+    return m_fileOut;
 }
 

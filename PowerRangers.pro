@@ -19,10 +19,12 @@ SOURCES += main.cpp \
     node.cpp \
     htree.cpp \
     hfile.cpp \
-    functions.cpp
+    functions.cpp \
+    hbyte.cpp
 
 HEADERS += \
     node.h \
     htree.h \
     hfile.h \
-    functions.h
+    functions.h \
+    hbyte.h
