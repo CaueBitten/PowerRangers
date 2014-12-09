@@ -33,7 +33,7 @@ void HFile::openFile()
 
 void HFile::buildHuffmanFile(QByteArray codeFile, QString nameFile)
 {
-    QFile file(nameFile);
+    QFile file("text.huff");
     if(!file.open(QIODevice::WriteOnly)){
         qDebug() << "The file could not be write";
         return;

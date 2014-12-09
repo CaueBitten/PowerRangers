@@ -28,6 +28,34 @@ QByteArray toHex(QByteArray binary){
     return hex;
 }
 
+QByteArray toChar(QByteArray hex){
+    QByteArray aux;
+    QByteArray finalChar;
+    for(int i = 0; i < hex.size(); i += 2){
+        aux.append(hex.at(i));
+        aux.append(hex.at(i+1));
+        finalChar.append(aux);
+        unsigned char tmp = finalChar.at(i/2);
+        finalChar.remove(i/2, 1);
+        finalChar.insert(i/2, tmp);
+        aux.clear();
+    }
+    return finalChar;
+}
+
+unsigned char toByte(QByteArray byteArray)
+{
+    unsigned char myByte = 0;
+    unsigned char mask = 0x1;
+    for(int i = 7; i >= 0  ; i--){
+        if(byteArray.at(i) == '1'){
+            mask = 0x1 << 7-i;
+            myByte += mask;
+        }
+    }
+    return myByte;
+}
+
 Node* buildTree(int *count)
 {
     QList<Node*> list;
@@ -51,21 +79,22 @@ Node* buildTree(int *count)
 void compression()
 {
     // Manipulador do arquivo
-    HFile file = new HFile();
+    HFile *file = new HFile();
     // Arvore de Huffman
     HTree *tree;
 
     // Lê o arquivo e conta a frequência dos bytes
-    fileIn->openFile();
+    file->openFile();
     // Cria a árvore de Huffman
-    tree = new HTree(buildTree(fileIn->count));
+    tree = new HTree(buildTree(file->count));
     tree->toHuffman();
-    tree->encodingFile(fileIn->copyFile);
-    tree->getTreeCode();
-    tree->getFileCode();
-    tree->trashCode();
-    tree->getFileCode();
-    tree->sizeTree();
+    tree->encodingFile(file->copyFile);
+    //tree->getTreeCode();
+    //tree->getFileCode();
+    qDebug() << tree->trashCode();
+    qDebug() << tree->getFileCode();
+    qDebug() << tree->sizeTree();
+    qDebug() << tree->sizeName((QString)"text.txt");
     file->buildHuffmanFile(tree->finalCode(tree->sizeName((QString)"text.txt"), (QString)"text.txt"), (QString)"text.txt");
 }
 
@@ -73,3 +102,5 @@ void uncompression()
 {
 
 }
+
+

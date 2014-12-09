@@ -42,7 +42,7 @@ public:
     void encodingFile(QByteArray copyFiles);  //  Codifica o arquivo
     QByteArray getFileCode();  //  Retorna a codificação do arquivo
     QByteArray trashCode();  //  Retorna o lixo da codificação do arquivo e incrementa o codigo do arquivo
-    int sizeTree();  //  Retorna o tamanho da árvore
+    QByteArray sizeTree();  //  Retorna o tamanho da árvore
     QByteArray sizeName(QString nameFile);  //  Retorna o tamanho do nome do arquivo
     QByteArray finalCode(QByteArray sizeName, QString fileName); // Retorna o código final do arquivo
 

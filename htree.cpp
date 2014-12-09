@@ -52,7 +52,7 @@ HTree::HTree(QByteArray treeCode){
     m_root = 0;
     m_cursor = m_root;
     m_listCodes = new QString[256];
-    m_treeCode = treeCode;
+    m_treeCode.append(treeCode);
 }
 
 HTree::HTree(Node *cell){
@@ -85,6 +85,7 @@ QString HTree::toString(){
 
 void HTree::toHuffman(){
     toHuffman(m_root);
+    return;
 }
 
 QByteArray HTree::getTreeCode(){
@@ -105,10 +106,16 @@ QByteArray HTree::getFileCode()
 
 QByteArray HTree::trashCode()
 {
-    int trash = (m_fileCode.size()+2)%8;
+    QByteArray tmp;
+    int trash = (m_fileCode.size())%8;
     char aux[3];
 
     itoa(trash, aux, 2);
+    tmp.append(aux);
+
+    for(int i = 0; i < 3 - tmp.size(); i++){
+        m_sizeTrash.append("0");
+    }
     m_sizeTrash.append(aux);
 
     for(int i = 0; i < trash; i++){
@@ -118,7 +125,7 @@ QByteArray HTree::trashCode()
     return m_sizeTrash;
 }
 
-int HTree::sizeTree()
+QByteArray HTree::sizeTree()
 {
     char aux[13];
     QByteArray tmp;
@@ -134,7 +141,7 @@ int HTree::sizeTree()
     m_sizeTree = tmp;
 
 
-    return m_treeCode.size();
+    return m_sizeTree;
 }
 
 QByteArray HTree::sizeName(QString nameFile)
@@ -150,6 +157,7 @@ QByteArray HTree::sizeName(QString nameFile)
     for(int i = 0; i < 8 - tmp.size(); i++){
         nameFileReturn.append("0");
     }
+
     nameFileReturn.append(aux);
     return nameFileReturn;
 }
@@ -157,35 +165,67 @@ QByteArray HTree::sizeName(QString nameFile)
 QByteArray HTree::finalCode(QByteArray sizeName, QString fileName)
 {
     QByteArray aux;
+    QByteArray tmp;
     QByteArray head;
     QByteArray name;
     QByteArray code;
 
-    m_sizeTrash.append(m_sizeTree);
-    for(int i = 0; i < 16; i += 4){
-        for(int j = 0; j < 4; j++){
-            aux.append(m_sizeTrash.at(j+i));
+    /* Início da Setação dos dois primeiros bytes do cabeçalho*/
+    aux = m_sizeTrash.append(m_sizeTree);
+    for(int i = 0; i < 16; i++){
+        tmp.append(aux.at(i));
+        if(i%8 == 7 && i > 0){
+            head.append(toByte(tmp));
+            tmp.clear();
         }
-        head.append(toHex(aux));
-        aux.clear();
     }
+    /* Fim da Setação dos dois primeiros bytes do cabeçalho*/
 
-    for(int i = 0; i < 8; i += 4){
-        for(int j = 0; j < 4; j++){
-            aux.append(sizeName.at(j+i));
-        }
-        name.append(toHex(aux));
-        aux.clear();
-    }
+    /* Início da Setação do terceiro byte do cabeçalho */
+    name.append(toByte(sizeName));
     name.append(fileName);
-
-    for(int i = 0; i < m_fileCode.size(); i += 4){
-        for(int j = 0; j < 4; j++){
-            aux.append(m_fileCode.at(j+i));
+    /* Fim da Setação do terceiro byte do cabeçalho */
+    aux = m_fileCode;
+    for(int i = 0; i < m_fileCode.size(); i++){
+        tmp.append(aux.at(i));
+        if(i%8 == 7 && i > 0){
+            code.append(toByte(tmp));
+            qDebug() <<"code" << i/8 << hex << (unsigned char) code.at(i/8) ;
+            tmp.clear();
         }
-        code.append(toHex(aux));
-        aux.clear();
     }
+
+    /* Início da Setação dos bytes do código no cabeçalho */
+
+    /* Fim da Setação dos bytes do código no cabeçalho */
+
+//    for(int i = 0; i < 16; i += 4){
+//        for(int j = 0; j < 4; j++){
+//            aux.append(m_sizeTrash.at(j+i));
+//        }
+//        head.append(toHex(aux));
+//        aux.clear();
+//    }
+
+//    head = toChar(head);
+
+//    for(int i = 0; i < 8; i += 4){
+//        for(int j = 0; j < 4; j++){
+//            aux.append(sizeName.at(j+i));
+//        }
+//        name.append(toHex(aux));
+//        aux.clear();
+//    }
+//    name.append(fileName);
+
+//    for(int i = 0; i < m_fileCode.size(); i += 4){
+//        for(int j = 0; j < 4; j++){
+//            aux.append(m_fileCode.at(j+i));
+//        }
+//        code.append(toHex(aux));
+//        aux.clear();
+//    }
+
 
     m_fileOut.append(head);
     m_fileOut.append(name);
