@@ -18,6 +18,7 @@ void HFile::openFile()
         return;
     }
 
+
     //Ler o arquivo e conta a frequência de cada caracter.
     while (!file.atEnd()) {
         QByteArray line = file.readLine(1024);
@@ -26,4 +27,18 @@ void HFile::openFile()
             ++count[(unsigned char)line[i]];
         }
     }
+
+    file.close();
+}
+
+void HFile::buildHuffmanFile(QByteArray codeFile, QString nameFile)
+{
+    QFile file(nameFile);
+    if(!file.open(QIODevice::WriteOnly)){
+        qDebug() << "The file could not be write";
+        return;
+    }
+
+    file.write(codeFile);
+    file.close();
 }

@@ -51,12 +51,9 @@ Node* buildTree(int *count)
 void compression()
 {
     // Manipulador do arquivo
-    HFile *fileIn = new HFile();
+    HFile file = new HFile();
     // Arvore de Huffman
     HTree *tree;
-    // Código do arquivo de saída
-    QByteArray fileOut;
-
 
     // Lê o arquivo e conta a frequência dos bytes
     fileIn->openFile();
@@ -69,7 +66,7 @@ void compression()
     tree->trashCode();
     tree->getFileCode();
     tree->sizeTree();
-    tree->finalCode();
+    file->buildHuffmanFile(tree->finalCode(tree->sizeName((QString)"text.txt"), (QString)"text.txt"), (QString)"text.txt");
 }
 
 void uncompression()

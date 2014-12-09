@@ -137,10 +137,28 @@ int HTree::sizeTree()
     return m_treeCode.size();
 }
 
-QByteArray HTree::finalCode()
+QByteArray HTree::sizeName(QString nameFile)
+{
+    QByteArray nameFileReturn;
+    QByteArray tmp;
+    int length = nameFile.size();
+    char aux[8];
+
+    itoa(length, aux, 2);
+    tmp.append(aux);
+
+    for(int i = 0; i < 8 - tmp.size(); i++){
+        nameFileReturn.append("0");
+    }
+    nameFileReturn.append(aux);
+    return nameFileReturn;
+}
+
+QByteArray HTree::finalCode(QByteArray sizeName, QString fileName)
 {
     QByteArray aux;
     QByteArray head;
+    QByteArray name;
     QByteArray code;
 
     m_sizeTrash.append(m_sizeTree);
@@ -152,6 +170,15 @@ QByteArray HTree::finalCode()
         aux.clear();
     }
 
+    for(int i = 0; i < 8; i += 4){
+        for(int j = 0; j < 4; j++){
+            aux.append(sizeName.at(j+i));
+        }
+        name.append(toHex(aux));
+        aux.clear();
+    }
+    name.append(fileName);
+
     for(int i = 0; i < m_fileCode.size(); i += 4){
         for(int j = 0; j < 4; j++){
             aux.append(m_fileCode.at(j+i));
@@ -161,6 +188,7 @@ QByteArray HTree::finalCode()
     }
 
     m_fileOut.append(head);
+    m_fileOut.append(name);
     m_fileOut.append(m_treeCode);
     m_fileOut.append(code);
 
