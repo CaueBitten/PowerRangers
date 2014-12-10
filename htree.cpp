@@ -32,20 +32,13 @@ void HTree::toHuffman(Node *node){
     }
 }
 
-//void HTree::toTree(Node *node)
-//{
-//    if(m_treeCode.at(0) == '*'){
-//        m_treeCode.remove(0,1);
-//    }
-//    else if(m_treeCode.at(0) == '('){
-
-//    }
-//}
-
 HTree::HTree(){
     m_root = 0;
     m_cursor = m_root;
     m_listCodes = new QString[256];
+    s_Trash = 0;
+    s_Tree = 0;
+    s_Name = 0;
 }
 
 HTree::HTree(QByteArray treeCode){
@@ -63,6 +56,11 @@ HTree::HTree(Node *cell){
 Node* HTree::add(Node *cell_one, Node *cell_two){
     Node *mother = new Node(0, cell_one->frequency + cell_two->frequency, cell_one, cell_two);
     return mother;
+}
+
+void HTree::setRoot(Node *root)
+{
+    m_root = root;
 }
 
 Node* HTree::getTree(){
@@ -95,7 +93,7 @@ QByteArray HTree::getTreeCode(){
 void HTree::encodingFile(QByteArray copyFiles)
 {
     for(int i = 0; i < copyFiles.size(); i++){
-        m_fileCode.append(m_listCodes[copyFiles.at(i)]);
+        m_fileCode.append(m_listCodes[(unsigned char)copyFiles.at(i)]);
     }
 }
 
@@ -185,46 +183,18 @@ QByteArray HTree::finalCode(QByteArray sizeName, QString fileName)
     name.append(toByte(sizeName));
     name.append(fileName);
     /* Fim da Setação do terceiro byte do cabeçalho */
+
+    /* Início da Setação dos bytes do código no cabeçalho */
     aux = m_fileCode;
     for(int i = 0; i < m_fileCode.size(); i++){
         tmp.append(aux.at(i));
         if(i%8 == 7 && i > 0){
             code.append(toByte(tmp));
-            qDebug() <<"code" << i/8 << hex << (unsigned char) code.at(i/8) ;
             tmp.clear();
         }
     }
-
-    /* Início da Setação dos bytes do código no cabeçalho */
-
     /* Fim da Setação dos bytes do código no cabeçalho */
 
-//    for(int i = 0; i < 16; i += 4){
-//        for(int j = 0; j < 4; j++){
-//            aux.append(m_sizeTrash.at(j+i));
-//        }
-//        head.append(toHex(aux));
-//        aux.clear();
-//    }
-
-//    head = toChar(head);
-
-//    for(int i = 0; i < 8; i += 4){
-//        for(int j = 0; j < 4; j++){
-//            aux.append(sizeName.at(j+i));
-//        }
-//        name.append(toHex(aux));
-//        aux.clear();
-//    }
-//    name.append(fileName);
-
-//    for(int i = 0; i < m_fileCode.size(); i += 4){
-//        for(int j = 0; j < 4; j++){
-//            aux.append(m_fileCode.at(j+i));
-//        }
-//        code.append(toHex(aux));
-//        aux.clear();
-//    }
 
 
     m_fileOut.append(head);
@@ -235,3 +205,69 @@ QByteArray HTree::finalCode(QByteArray sizeName, QString fileName)
     return m_fileOut;
 }
 
+bool HTree::getBit(long long pos)
+{
+    char byte = my_fileCode.at(pos/8);
+    char mask = 0x1;
+    mask = mask << (7 - pos%8);
+    byte = byte & mask;
+    if(byte){
+        return true;
+    }
+    return false;
+}
+
+void HTree::getSizeThings(QByteArray code)
+{
+    my_fileCode = code;
+    for(int i = 0; i < 24; i++){
+        if(i <= 2){
+            if(getBit(i)){
+                s_Trash += 0x1 << (2-i);
+            }
+        }
+        else if(i <= 15){
+            if(getBit(i)){
+                s_Tree += 0x1 << (15-i);
+            }
+        }
+        else{
+            if(getBit(i)){
+                s_Name += 0x1 << (23-i);
+            }
+        }
+    }
+    for(int i = 3; i < 3 + s_Name; i++){
+        my_fileName +=my_fileCode.at(i);
+    }
+    for(int i = 3 + s_Name; i < 3 + s_Name + s_Tree; i++){
+        my_treeCode.append((unsigned char )my_fileCode.at(i));
+    }
+    for(int i = 3*8 + s_Name*8 + s_Tree*8; i < (my_fileCode.size()*8 - s_Trash); i++){
+        if(getBit(i)){
+            my_preCode += '1';
+        }
+        else{
+            my_preCode += '0';
+        }
+    }
+    for(int i = 0; i < s_Tree; i++){
+        preTree.append(new Node(my_treeCode.at(i), 0, 0, 0));
+    }
+}
+
+void HTree::setFileOut(){
+    m_cursor = m_root;
+    for(int i = 0; i < my_preCode.size(); i++){
+        if(my_preCode.at(i) == '0'){
+            toLeft();
+        }
+        else if(my_preCode.at(i) == '1'){
+            toRight();
+        }
+        if(m_cursor->isLeaf()){
+            my_finalOutPut += m_cursor->content;
+            m_cursor = m_root;
+        }
+    }
+}

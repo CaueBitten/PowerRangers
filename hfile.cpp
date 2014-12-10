@@ -8,9 +8,9 @@ HFile::HFile()
     }
 }
 
-void HFile::openFile()
+void HFile::openFile(QString nameFile)
 {
-    QFile file("text.txt");
+    QFile file(nameFile);
 
     //Termina a função caso o arquivo não abra
     if (!file.open(QIODevice::ReadOnly)){
@@ -33,12 +33,41 @@ void HFile::openFile()
 
 void HFile::buildHuffmanFile(QByteArray codeFile, QString nameFile)
 {
-    QFile file("text.huff");
+    QFile file(nameFile);
     if(!file.open(QIODevice::WriteOnly)){
         qDebug() << "The file could not be write";
         return;
     }
 
     file.write(codeFile);
+    file.close();
+}
+
+void HFile::openFilesimple(QString nameIn)
+{
+    QFile file(nameIn);
+
+    //Termina a função caso o arquivo não abra
+    if (!file.open(QIODevice::ReadOnly)){
+        qDebug() << "The file could not be read.";
+        return;
+    }
+
+    while (!file.atEnd()) {
+        QByteArray line = file.readLine(1024);
+        copyFile.append(line);
+    }
+
+}
+
+void HFile::rebuildFile(QString name, QByteArray code)
+{
+    QFile file(name);
+    if(!file.open(QIODevice::WriteOnly)){
+        qDebug() << "The file could not be write";
+        return;
+    }
+
+    file.write(code);
     file.close();
 }
