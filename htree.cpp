@@ -79,17 +79,18 @@ QString HTree::toString(){
 
 void HTree::toHuffman(){
     toHuffman(m_root);
-    return;
 }
 
 QByteArray HTree::getTreeCode(){
+
     return m_treeCode;
 }
 
 void HTree::encodingFile(QByteArray copyFiles)
 {
     for(int i = 0; i < copyFiles.size(); i++){
-        m_fileCode.append(m_listCodes[(unsigned char)copyFiles.at(i)]);
+        unsigned char buffer = (unsigned char)copyFiles.at(i);
+        m_fileCode.append(m_listCodes[buffer]);
     }
 }
 
@@ -201,9 +202,32 @@ QByteArray HTree::finalCode(QByteArray sizeName, QString fileName)
     return m_fileOut;
 }
 
-bool HTree::getBit(long long pos)
+void HTree::showListCode()
+{
+    qDebug() << hex << 0;
+    qDebug() << m_listCodes->at(0);
+    for(int i = 0; i < 256; i++){
+        if(m_listCodes[i].size()){
+            qDebug() << hex << i;
+            qDebug() << m_listCodes[i];
+        }
+    }
+}
+
+bool HTree::getBit(long long int pos)
 {
     unsigned char byte = (unsigned char) my_fileCode.at(pos/8);
+    unsigned char mask = 0x1;
+    mask = mask << (7 - pos%8);
+    byte = byte & mask;
+    if(byte){
+        return true;
+    }
+    return false;
+}
+bool HTree::getBit(long long int pos, QByteArray bytes)
+{
+    unsigned char byte = (unsigned char) bytes.at(pos/8);
     unsigned char mask = 0x1;
     mask = mask << (7 - pos%8);
     byte = byte & mask;
@@ -215,7 +239,7 @@ bool HTree::getBit(long long pos)
 
 void HTree::getSizeThings(QByteArray code)
 {
-    my_fileCode = code;
+    my_fileCode = code;  
     for(int i = 0; i < 24; i++){
         if(i <= 2){
             if(getBit(i)){
@@ -239,9 +263,12 @@ void HTree::getSizeThings(QByteArray code)
     for(int i = 3 + s_Name; i < 3 + s_Name + s_Tree; i++){
         my_treeCode.append((unsigned char)my_fileCode.at(i));
     }
+
+    my_fileCode.remove(0,3+s_Name+s_Tree);
     setRoot(rebuildTree(this->my_treeCode));
     m_cursor = m_root;
-    for(long long int i = 3*8 + s_Name*8 + s_Tree*8; i < (long long int)((long long int)(my_fileCode.size())*8 - s_Trash); i++){
+
+    for(long long int i = 0; i < (long long int)((my_fileCode.size()*8) - s_Trash); i++){
         if(getBit(i)){
             toRight();
         }
@@ -250,10 +277,12 @@ void HTree::getSizeThings(QByteArray code)
         }
         if(m_cursor->isLeaf()){
             my_finalOutPut += (unsigned char)m_cursor->content;
+            qDebug() << hex << (unsigned char)m_cursor->content << "eu";
             m_cursor = m_root;
         }
-
     }
+
+
 }
 
 void HTree::setFileOut(){

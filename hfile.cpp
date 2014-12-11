@@ -27,7 +27,6 @@ void HFile::openFile(QString nameFile)
             ++count[(unsigned char)line[i]];
         }
     }
-
     file.close();
 }
 
@@ -67,7 +66,7 @@ void HFile::rebuildFile(QString name, QByteArray code)
         qDebug() << "The file could not be write";
         return;
     }
-
+    qDebug() << code;
     file.write(code);
     file.close();
 }

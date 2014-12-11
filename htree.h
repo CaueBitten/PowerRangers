@@ -47,6 +47,7 @@ public:
     QByteArray sizeTree();  //  Retorna o tamanho da árvore
     QByteArray sizeName(QString nameFile);  //  Retorna o tamanho do nome do arquivo
     QByteArray finalCode(QByteArray sizeName, QString fileName); // Retorna o código final do arquivo
+    void showListCode(); // Imprime o código de cada caracter
 
     // Métodos e atributos da Descompressão
 
@@ -61,6 +62,7 @@ public:
     int s_Name;
 
     bool getBit(long long int pos);  //  Retorna o bit na posição indicada
+    bool HTree::getBit(long long int pos, QByteArray bytes);
     void getSizeThings(QByteArray code);  //  Obtém todos os dados do arquivo
     void setFileOut(); // Remonta o arquivo
 };

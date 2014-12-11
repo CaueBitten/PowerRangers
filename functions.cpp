@@ -33,7 +33,7 @@ Node* buildTree(int *count)
 
     while(list.length() != 1){
         qSort(list.begin(), list.end(), lessthan);
-        Node *mother = new Node(0, list.at(0)->frequency + list.at(1)->frequency, list.at(0), list.at(1));
+        Node *mother = new Node(0, list.at(0)->frequency + list.at(1)->frequency, 0, list.at(0), list.at(1));
         list.removeAt(0);
         list.removeAt(0);
         list.append(mother);
@@ -57,7 +57,6 @@ void compression(QString nameIn, QString nameOut)
 
     // Lê o arquivo e conta a frequência dos bytes
     file->openFile(nameIn);
-
     if(!file->copyFile.size()){
         qDebug() << "ARQUIVO VAZIO!";
         return;
@@ -66,12 +65,12 @@ void compression(QString nameIn, QString nameOut)
     // Cria a árvore de Huffman
     tree = new HTree(buildTree(file->count));
     tree->toHuffman();
-
-
     tree->encodingFile(file->copyFile);
     tree->trashCode();
     tree->sizeTree();
-    file->buildHuffmanFile(tree->finalCode(tree->sizeName(nameIn), nameIn), nameOut);
+    tree->showListCode();
+    QByteArray codeHuffOut = tree->finalCode(tree->sizeName(nameIn), nameIn);
+    file->buildHuffmanFile(codeHuffOut, nameOut);
 
     qDebug() << "Arquivo compactado com sucesso!" ;
 }
