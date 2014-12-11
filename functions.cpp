@@ -7,41 +7,6 @@ bool lessthan(Node* x, Node* y){
     return (x->frequency < y->frequency);
 }
 
-QByteArray toHex(QByteArray binary){
-    QByteArray hex;
-        if(binary == "0000") hex.append("0");
-        if(binary == "0001") hex.append("1");
-        if(binary == "0010") hex.append("2");
-        if(binary == "0011") hex.append("3");
-        if(binary == "0100") hex.append("4");
-        if(binary == "0101") hex.append("5");
-        if(binary == "0110") hex.append("6");
-        if(binary == "0111") hex.append("7");
-        if(binary == "1000") hex.append("8");
-        if(binary == "1001") hex.append("9");
-        if(binary == "1010") hex.append("A");
-        if(binary == "1011") hex.append("B");
-        if(binary == "1100") hex.append("C");
-        if(binary == "1101") hex.append("D");
-        if(binary == "1110") hex.append("E");
-        if(binary == "1111") hex.append("F");
-    return hex;
-}
-
-QByteArray toChar(QByteArray hex){
-    QByteArray aux;
-    QByteArray finalChar;
-    for(int i = 0; i < hex.size(); i += 2){
-        aux.append(hex.at(i));
-        aux.append(hex.at(i+1));
-        finalChar.append(aux);
-        unsigned char tmp = finalChar.at(i/2);
-        finalChar.remove(i/2, 1);
-        finalChar.insert(i/2, tmp);
-        aux.clear();
-    }
-    return finalChar;
-}
 
 unsigned char toByte(QByteArray byteArray)
 {
@@ -62,7 +27,7 @@ Node* buildTree(int *count)
 
     for(int i = 0; i < 256; i++){
         if(count[i]){
-            list.append(new Node(i, count[i], 0, 0));
+            list.append(new Node((unsigned char) i, count[i], 0, 0));
         }
     }
 
@@ -92,6 +57,7 @@ void compression(QString nameIn, QString nameOut)
 
     // Lê o arquivo e conta a frequência dos bytes
     file->openFile(nameIn);
+
     if(!file->copyFile.size()){
         qDebug() << "ARQUIVO VAZIO!";
         return;
@@ -102,9 +68,10 @@ void compression(QString nameIn, QString nameOut)
     tree->toHuffman();
 
 
+    qDebug() << tree->getTreeCode();
     tree->encodingFile(file->copyFile);
-    tree->trashCode();
-    tree->sizeTree();
+    qDebug() << tree->trashCode();
+    qDebug() << tree->sizeTree();
     file->buildHuffmanFile(tree->finalCode(tree->sizeName(nameIn), nameIn), nameOut);
 
     qDebug() << "Arquivo compactado com sucesso!" ;
@@ -128,6 +95,12 @@ void uncompression(QString nameFile)
 
     tree->setRoot(rebuildTree(tree->my_treeCode));
     tree->setFileOut();
+
+    qDebug() << tree->s_Trash << tree->s_Name << tree->s_Tree;
+    qDebug() << tree->my_treeCode;
+    qDebug() << tree->my_preCode;
+    qDebug() << tree->my_finalOutPut;
+
 
     file->rebuildFile(tree->my_fileName, tree->my_finalOutPut);
 

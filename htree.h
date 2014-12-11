@@ -34,7 +34,6 @@ public:
     HTree();
     HTree(Node *cell);
     HTree(QByteArray treeCode);
-    Node* add(Node *cell_one, Node *cell_two);  //  Adciona um nó na árvore
     void setRoot(Node* root);  //  Seta a raíz da árvore
     Node* getTree();  //  Retorna o a raiz da árvore
     void toLeft();  //  Faz o cursor se deslocar para o nó da esquerda

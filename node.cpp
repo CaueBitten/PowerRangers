@@ -1,18 +1,18 @@
 #include "node.h"
 
 Node::Node(unsigned char content, int frequency, Node *left, Node *right){
-    this->content = content;
+    this->content = (unsigned char)content;
     this->frequency = frequency;
     this->left = left;
     this->right = right;
 }
 
 QPair<Node*, int> Node::FromByteArray(QByteArray data, int pos){
-    char current = data.at(pos);
+    char current = (unsigned char)data.at(pos);
     if(current != 0x28){
         if(current == 0x2A){
             pos++;
-            current = data.at(pos);
+            current = (unsigned char)data.at(pos);
         }
         return QPair<Node*, int> (new Node((unsigned char)current,0,0,0), pos);
     }
