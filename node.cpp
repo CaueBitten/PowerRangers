@@ -14,8 +14,7 @@ QPair<Node*, int> Node::FromByteArray(QByteArray data, int pos){
             pos++;
             current = data.at(pos);
         }
-        qDebug() << current;
-        return QPair<Node*, int> (new Node(current,0,0,0), pos);
+        return QPair<Node*, int> (new Node((unsigned char)current,0,0,0), pos);
     }
     QPair<Node*, int> left = this->FromByteArray(data, pos+1);
     QPair<Node*, int> right = this->FromByteArray(data, left.second +1);

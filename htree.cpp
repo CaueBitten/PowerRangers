@@ -105,7 +105,7 @@ QByteArray HTree::getFileCode()
 QByteArray HTree::trashCode()
 {
     QByteArray tmp;
-    int trash = (m_fileCode.size())%8;
+    int trash = 8 - (m_fileCode.size())%8;
     char aux[3];
 
     itoa(trash, aux, 2);
@@ -117,7 +117,7 @@ QByteArray HTree::trashCode()
     m_sizeTrash.append(aux);
 
     for(int i = 0; i < trash; i++){
-        m_fileCode.append('0');
+        m_fileCode += '0';
     }
 
     return m_sizeTrash;
@@ -238,21 +238,18 @@ void HTree::getSizeThings(QByteArray code)
         }
     }
     for(int i = 3; i < 3 + s_Name; i++){
-        my_fileName +=my_fileCode.at(i);
+        my_fileName += (unsigned char)my_fileCode.at(i);
     }
     for(int i = 3 + s_Name; i < 3 + s_Name + s_Tree; i++){
-        my_treeCode.append((unsigned char )my_fileCode.at(i));
+        my_treeCode.append((unsigned char)my_fileCode.at(i));
     }
-    for(int i = 3*8 + s_Name*8 + s_Tree*8; i < (my_fileCode.size()*8 - s_Trash); i++){
+    for(int i = 3*8 + s_Name*8 + s_Tree*8; i < ((my_fileCode.size())*8 - s_Trash); i++){
         if(getBit(i)){
             my_preCode += '1';
         }
         else{
             my_preCode += '0';
         }
-    }
-    for(int i = 0; i < s_Tree; i++){
-        preTree.append(new Node(my_treeCode.at(i), 0, 0, 0));
     }
 }
 
@@ -266,7 +263,7 @@ void HTree::setFileOut(){
             toRight();
         }
         if(m_cursor->isLeaf()){
-            my_finalOutPut += m_cursor->content;
+            my_finalOutPut += (unsigned char)m_cursor->content;
             m_cursor = m_root;
         }
     }

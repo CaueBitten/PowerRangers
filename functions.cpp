@@ -90,17 +90,15 @@ void compression(QString nameIn, QString nameOut)
     // Arvore de Huffman
     HTree *tree;
 
-
     // Lê o arquivo e conta a frequência dos bytes
     file->openFile(nameIn);
+
     // Cria a árvore de Huffman
     tree = new HTree(buildTree(file->count));
     tree->toHuffman();
     tree->encodingFile(file->copyFile);
-    qDebug() << tree->trashCode();
-    tree->getFileCode();
+    tree->trashCode();
     tree->sizeTree();
-    qDebug() << tree->getTreeCode();
     file->buildHuffmanFile(tree->finalCode(tree->sizeName(nameIn), nameIn), nameOut);
 
     qDebug() << "Arquivo comprimido com sucesso!" ;
@@ -114,22 +112,16 @@ void uncompression(QString nameFile)
     HTree *tree = new HTree();
     // Lê o arquvio .huff
     file->openFilesimple(nameFile);
-
+    qDebug() << "1";
     tree->getSizeThings(file->copyFile);
-
-    qDebug() << tree->s_Trash;
-//    qDebug() << tree->s_Tree;
-//    qDebug() << tree->s_Name;
-//    qDebug() << tree->my_fileName;;
-    qDebug() << tree->my_treeCode;
-    qDebug() << tree->my_preCode;
-
+    qDebug() << "1";
     tree->setRoot(rebuildTree(tree->my_treeCode));
+    qDebug() << "1";
     tree->setFileOut();
-    //qDebug() << tree->my_finalOutPut;
+    qDebug() << "1";
     file->rebuildFile(tree->my_fileName, tree->my_finalOutPut);
 
-    qDebug() << "Arquivo descompactado com sucesso!";
+    qDebug() << "Arquivo compactado com sucesso!";
 }
 
 void uncompression(QString nameFile, QString localOut)
