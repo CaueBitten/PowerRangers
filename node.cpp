@@ -8,7 +8,7 @@ Node::Node(unsigned char content, int frequency, Node *left, Node *right){
 }
 
 QPair<Node*, int> Node::FromByteArray(QByteArray data, int pos){
-    char current = (unsigned char)data.at(pos);
+    unsigned char current = (unsigned char)data.at(pos);
     if(current != 0x28){
         if(current == 0x2A){
             pos++;

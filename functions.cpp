@@ -68,10 +68,9 @@ void compression(QString nameIn, QString nameOut)
     tree->toHuffman();
 
 
-    qDebug() << tree->getTreeCode();
     tree->encodingFile(file->copyFile);
-    qDebug() << tree->trashCode();
-    qDebug() << tree->sizeTree();
+    tree->trashCode();
+    tree->sizeTree();
     file->buildHuffmanFile(tree->finalCode(tree->sizeName(nameIn), nameIn), nameOut);
 
     qDebug() << "Arquivo compactado com sucesso!" ;
@@ -93,13 +92,12 @@ void uncompression(QString nameFile)
         return;
     }
 
-    tree->setRoot(rebuildTree(tree->my_treeCode));
-    tree->setFileOut();
+//    tree->setRoot(rebuildTree(tree->my_treeCode));
+//    tree->setFileOut();
 
-    qDebug() << tree->s_Trash << tree->s_Name << tree->s_Tree;
-    qDebug() << tree->my_treeCode;
-    qDebug() << tree->my_preCode;
-    qDebug() << tree->my_finalOutPut;
+//    qDebug() << tree->s_Trash << tree->s_Name << tree->s_Tree;
+//    qDebug() << tree->my_treeCode;
+//    qDebug() << tree->my_finalOutPut;
 
 
     file->rebuildFile(tree->my_fileName, tree->my_finalOutPut);
@@ -111,6 +109,7 @@ void uncompression(QString nameFile, QString localOut)
 {
     // Manipulador do arquivo
     HFile *file = new HFile();
+    HFile *fileOut = new HFile();
     // Árvore de Huffman
     HTree *tree = new HTree();
 
@@ -126,7 +125,8 @@ void uncompression(QString nameFile, QString localOut)
     tree->setRoot(rebuildTree(tree->my_treeCode));
     tree->setFileOut();
     localOut.append(tree->my_fileName);
-    file->rebuildFile(localOut, tree->my_finalOutPut);
+
+    fileOut->rebuildFile(localOut, tree->my_finalOutPut);
 
     qDebug() << "Arquivo descompactado com sucesso!";
 }

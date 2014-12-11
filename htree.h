@@ -55,6 +55,7 @@ public:
     QByteArray my_treeCode;
     QByteArray my_preCode;
     QByteArray my_finalOutPut;
+
     int s_Trash;
     int s_Tree;
     int s_Name;
