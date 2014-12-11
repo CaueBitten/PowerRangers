@@ -57,7 +57,7 @@ void HFile::openFilesimple(QString nameIn)
         QByteArray line = file.readLine(1024);
         copyFile.append(line);
     }
-
+    file.close();
 }
 
 void HFile::rebuildFile(QString name, QByteArray code)

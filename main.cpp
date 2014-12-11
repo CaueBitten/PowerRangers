@@ -58,12 +58,8 @@ int main(int argc, char *argv[])
     }
 
     else{
-        qDebug() << "Comando Inválido! \n Veja atentamente a lista de comandos:";
+        qDebug() << "COMANDO INVALIDO!\n";
         help();
     }
-
-    //QCoreApplication a(argc, argv);
-    //uncompression();
-    qDebug() << "AQUI";
     return 0;
 }

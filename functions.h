@@ -28,9 +28,9 @@ Node* rebuildTree(QByteArray cod);  //  Função que reconstroi a árvore
 
 void help();  //  Função que imprime a linha de comando
 
-QString getNameIn(QString nameIn);  //  Função que edita o nome do arquivo de entrada
-
 QString getNameOut(QString nameOut);  //  Função que edita o nome do arquivo de saída
+
+QString getNameIn(QString nameIn);  //  Função que edita o nome do arquivo de entrada
 
 bool isDotHuff(QString nameOut);  //  Função que verifica se o nome do arquivo é um .Huff
 

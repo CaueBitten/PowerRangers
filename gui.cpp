@@ -52,7 +52,7 @@ void Gui::on_Btn_unhuff_clicked()
 
     if(fileNameIn.size() && localOut.size()){
         if(localOut.at(localOut.size()-1) != '/') localOut += '/';
-        uncompression(fileNameIn, localOut);
+        uncompression(getNameIn(fileNameIn), localOut);
     }
     on_Btn_clear_clicked();
 }

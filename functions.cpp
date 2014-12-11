@@ -92,16 +92,22 @@ void compression(QString nameIn, QString nameOut)
 
     // Lê o arquivo e conta a frequência dos bytes
     file->openFile(nameIn);
+    if(!file->copyFile.size()){
+        qDebug() << "ARQUIVO VAZIO!";
+        return;
+    }
 
     // Cria a árvore de Huffman
     tree = new HTree(buildTree(file->count));
     tree->toHuffman();
+
+
     tree->encodingFile(file->copyFile);
     tree->trashCode();
     tree->sizeTree();
     file->buildHuffmanFile(tree->finalCode(tree->sizeName(nameIn), nameIn), nameOut);
 
-    qDebug() << "Arquivo comprimido com sucesso!" ;
+    qDebug() << "Arquivo compactado com sucesso!" ;
 }
 
 void uncompression(QString nameFile)
@@ -110,18 +116,22 @@ void uncompression(QString nameFile)
     HFile *file = new HFile();
     // Árvore de Huffman
     HTree *tree = new HTree();
+
     // Lê o arquvio .huff
     file->openFilesimple(nameFile);
-    qDebug() << "1";
     tree->getSizeThings(file->copyFile);
-    qDebug() << "1";
+
+    if(!tree->my_fileName.size() || !tree->my_treeCode.size()){
+        qDebug() << "ARQUIVO CORROMPIDO!";
+        return;
+    }
+
     tree->setRoot(rebuildTree(tree->my_treeCode));
-    qDebug() << "1";
     tree->setFileOut();
-    qDebug() << "1";
+
     file->rebuildFile(tree->my_fileName, tree->my_finalOutPut);
 
-    qDebug() << "Arquivo compactado com sucesso!";
+    qDebug() << "Arquivo descompactado com sucesso!";
 }
 
 void uncompression(QString nameFile, QString localOut)
@@ -130,19 +140,22 @@ void uncompression(QString nameFile, QString localOut)
     HFile *file = new HFile();
     // Árvore de Huffman
     HTree *tree = new HTree();
+
     // Lê o arquvio .huff
     file->openFilesimple(nameFile);
-
     tree->getSizeThings(file->copyFile);
 
-    qDebug() << tree->s_Trash;
-    qDebug() << tree->s_Tree;
-    qDebug() << tree->s_Name;
-    qDebug() << tree->my_fileName;;
-    qDebug() << tree->my_treeCode;
-    qDebug() << tree->my_preCode;
+    if(!tree->my_fileName.size() || !tree->my_treeCode.size()){
+        qDebug() << "ARQUIVO CORROMPIDO!";
+        return;
+    }
 
-    //qDebug() << tree->my_finalOutPut;
+    tree->setRoot(rebuildTree(tree->my_treeCode));
+    tree->setFileOut();
+    localOut.append(tree->my_fileName);
+    file->rebuildFile(localOut, tree->my_finalOutPut);
+
+    qDebug() << "Arquivo descompactado com sucesso!";
 }
 
 
@@ -165,12 +178,6 @@ void help(){
 }
 
 
-//QString getNameIn(QString nameIn)
-//{
-
-//}
-
-
 QString getNameOut(QString nameOut)
 {
     QString nameFileOut;
@@ -191,9 +198,13 @@ bool isDotHuff(QString nameOut){
     QString typeFileOut;
     int i;
     for(i = nameOut.size()-1 ; i > 0 && nameOut.at(i)!= '/'; i--);
-    if(i > 0 && nameOut.at(i) == '/') i++;
+    if(i > 0 && nameOut.at(i) == '/'){
+        i++;
+    }
     for( ; i < nameOut.size() && nameOut.at(i) != '.'; i++);
-    if(i < nameOut.size() && nameOut.at(i) == '.') i++;
+    if(i < nameOut.size() && nameOut.at(i) == '.'){
+        i++;
+    }
     for(; i < nameOut.size(); i++){
         typeFileOut.append(nameOut.at(i));
     }
@@ -202,4 +213,19 @@ bool isDotHuff(QString nameOut){
     }
     qDebug() << "ERRO: O ARQUIVO NAO EH DO TIPO '.huff'\n";
     return false;
+}
+
+
+QString getNameIn(QString nameIn)
+{
+    QString nameFileIn;
+    int i;
+    for(i = nameIn.size()-1 ; i > 0 && nameIn.at(i)!= '/'; i--);
+    if(i > 0 && nameIn.at(i) == '/'){
+        i++;
+    }
+    for(; i < nameIn.size(); i++){
+        nameFileIn.append(nameIn.at(i));
+    }
+    return nameFileIn;
 }
