@@ -2,9 +2,9 @@
 
 bool lessthan(Node* x, Node* y){
     if(x->frequency == y->frequency){
-        return (x->content < y->content);
+        return (x->content <= y->content);
     }
-    return (x->frequency < y->frequency);
+    return (x->frequency <= y->frequency);
 }
 
 
@@ -27,7 +27,7 @@ Node* buildTree(int *count)
 
     for(int i = 0; i < 256; i++){
         if(count[i]){
-            list.append(new Node((unsigned char) i, count[i], 0, 0));
+            list.append(new Node((unsigned char) i, count[i], 1, 0, 0));
         }
     }
 
@@ -68,7 +68,7 @@ void compression(QString nameIn, QString nameOut)
     tree->encodingFile(file->copyFile);
     tree->trashCode();
     tree->sizeTree();
-    tree->showListCode();
+    //tree->showListCode();
     QByteArray codeHuffOut = tree->finalCode(tree->sizeName(nameIn), nameIn);
     file->buildHuffmanFile(codeHuffOut, nameOut);
 

@@ -15,7 +15,7 @@ class Node{
     Node *right;
     QString code;
 
-    Node(unsigned char content = 0, int frequency = 0, bool leaf = 1, Node *left = 0, Node *right = 0);  // Criação do nó com seu conteúdo, frequência, filho esquerdo e filho direito
+    Node(unsigned char content = 0, int frequency = 0, bool leaf = 0, Node *left = 0, Node *right = 0);  // Criação do nó com seu conteúdo, frequência, filho esquerdo e filho direito
     QPair<Node*, int> FromByteArray(QByteArray data, int pos);
     bool isLeaf();  //  Determina se o nó é uma folha
 

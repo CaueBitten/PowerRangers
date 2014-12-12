@@ -89,8 +89,7 @@ QByteArray HTree::getTreeCode(){
 void HTree::encodingFile(QByteArray copyFiles)
 {
     for(int i = 0; i < copyFiles.size(); i++){
-        unsigned char buffer = (unsigned char)copyFiles.at(i);
-        m_fileCode.append(m_listCodes[buffer]);
+        m_fileCode.append(m_listCodes[(unsigned char)copyFiles.at(i)]);
     }
 }
 
@@ -102,19 +101,22 @@ QByteArray HTree::getFileCode()
 QByteArray HTree::trashCode()
 {
     QByteArray tmp;
-    int trash = 8 - ((long long int)m_fileCode.size())%8;
-    char aux[3];
-
+    int trash = 8 - (((long long int)m_fileCode.size())%8);
+    char *aux;
+    if(trash == 8){
+        trash = 0;
+    }
     itoa(trash, aux, 2);
+
     tmp.append(aux);
 
     for(int i = 0; i < 3 - tmp.size(); i++){
         m_sizeTrash.append("0");
     }
-    m_sizeTrash.append(aux);
+    m_sizeTrash += aux;
 
     for(int i = 0; i < trash; i++){
-        m_fileCode += '0';
+        m_fileCode += "0";
     }
 
     return m_sizeTrash;
@@ -205,7 +207,7 @@ QByteArray HTree::finalCode(QByteArray sizeName, QString fileName)
 void HTree::showListCode()
 {
     qDebug() << hex << 0;
-    qDebug() << m_listCodes->at(0);
+    qDebug() << m_listCodes[0];
     for(int i = 0; i < 256; i++){
         if(m_listCodes[i].size()){
             qDebug() << hex << i;
@@ -277,7 +279,6 @@ void HTree::getSizeThings(QByteArray code)
         }
         if(m_cursor->isLeaf()){
             my_finalOutPut += (unsigned char)m_cursor->content;
-            qDebug() << hex << (unsigned char)m_cursor->content << "eu";
             m_cursor = m_root;
         }
     }
