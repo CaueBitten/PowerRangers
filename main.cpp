@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
             uncompression(nameFile);
         }
         else{
+            qDebug() << "O arquivo não é do tipo .huff";
             help();
         }
     }
@@ -46,6 +47,7 @@ int main(int argc, char *argv[])
             uncompression(nameFile, localOut);
         }
         else{
+            qDebug() << "O arquivo não é do tipo .huff";
             help();
         }
     }
@@ -55,6 +57,34 @@ int main(int argc, char *argv[])
         Gui w;
         w.show();
         return a.exec();
+    }
+
+    else if(argc == 2 && (arg[1] == "-h" || arg[1] == "-help")){
+        help();
+    }
+
+    else if(argc == 3 && arg[1] == "-com"){
+        QString nameFile = arg[2];
+        QString nameFileOut = getNameOut(nameFile);
+        compression(nameFile, nameFileOut);
+        compression(nameFileOut, nameFileOut);
+    }
+
+    else if(argc == 3 && arg[1] == "-decom"){
+        QString nameFile = arg[2];
+        if(isDotHuff(nameFile)){
+            uncompression(nameFile);
+            if(isDotHuff(nameFile)){
+                uncompression(nameFile);
+            }
+            else{
+                qDebug() << "O arquivo não foi comprimido duplamente";
+            }
+        }
+        else{
+            qDebug() << "O arquivo não é do tipo .huff";
+            help();
+        }
     }
 
     else{

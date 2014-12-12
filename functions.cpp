@@ -137,13 +137,19 @@ void help(){
     help = "HELP:\n";
     help += "COMO USAR A LINHA DE COMANDO:\n";
     help += "1 -- $> huffman -c arquivo_origem.x -o arquivo_de_saida.huff\n";
-        help += "       Comprime o arquivo 'arquivo_origem.x' e gera o arquivo de saída  'arquivo_de_saida.huff'\n";
+        help += "       Comprime o arquivo 'arquivo_origem.x' e gera o arquivo de saída 'arquivo_de_saida.huff'\n";
     help += "2 -- $> huffman -c arquivo.x\n";
-        help += "       Comprime o arquivo 'arquivo.x' e gera o arquivo de saída  'arquivo.huff', mantendo o nome do arquivo original\n";
+        help += "       Comprime o arquivo 'arquivo.x' e gera o arquivo de saída 'arquivo.huff', mantendo o nome do arquivo original\n";
     help += "3 -- $> huffman arquivo.huf\n";
         help += "       Descomprime o arquivo 'arquivo.huff' na pasta local com o nome original\n";
-    help += "4 -- $> $> huffman arquivo.huff -d /home/user/destino\n";
+    help += "4 -- $> huffman arquivo.huff -d /home/user/destino\n";
         help += "       Descomprime o arquivo 'arquivo.huff' na pasta '/home/user/destino' com o nome original\n";
+    help += "5 -- $> huffman -com arquivo.x\n";
+        help += "       Comprime duplamente o arquivo 'arquivo.x' e gera o arquivo de saída 'arquivo.huff'\n";
+    help += "5 -- $> huffman -decom arquivo.huff\n";
+        help += "       Descomprime o arquivo 'arquivo.huff' (duplamente comprimido) na pasta local com o nome original\n";
+    help += "5 -- $> huffman -h (ou -help)\n";
+        help += "       Imprime a linha de comando\n";
     ;
 
     qDebug() << qPrintable(help);
