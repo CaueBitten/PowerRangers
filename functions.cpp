@@ -2,9 +2,9 @@
 
 bool lessthan(Node* x, Node* y){
     if(x->frequency == y->frequency){
-        return (x->content <= y->content);
+        return (x->content < y->content);
     }
-    return (x->frequency <= y->frequency);
+    return (x->frequency < y->frequency);
 }
 
 

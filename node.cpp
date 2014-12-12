@@ -24,8 +24,5 @@ QPair<Node*, int> Node::FromByteArray(QByteArray data, int pos){
 
 bool Node::isLeaf()
 {
-    if(this->left == 0 && this->right == 0){
-        return true;
-    }
-    return false;
+    return this->leaf;
 }

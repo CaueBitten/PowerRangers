@@ -14,11 +14,9 @@ void HTree::toHuffman(Node *node){
         m_treeCode += "(";
         if(node->left){
             node->left->code = node->code + "0";
-            m_listCodes[(unsigned char)node->left->content] = node->left->code;
         }
         if(node->right){
             node->right->code = node->code + "1";
-            m_listCodes[(unsigned char)node->right->content] = node->right->code;
         }
 
         toHuffman(node->left);
@@ -28,6 +26,8 @@ void HTree::toHuffman(Node *node){
         if((unsigned char)node->content == 40 || (unsigned char)node->content == 42){
             m_treeCode += "*";
         }
+        m_listCodes[(unsigned char)node->content] = node->code;
+
         m_treeCode += (unsigned char) node->content;
     }
 }
