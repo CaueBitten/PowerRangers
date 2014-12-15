@@ -51,20 +51,17 @@ public:
 
     // Métodos e atributos da Descompressão
 
-    QByteArray my_fileCode;
-    QString my_fileName;
-    QByteArray my_treeCode;
-    QByteArray my_preCode;
-    QByteArray my_finalOutPut;
+    QByteArray my_fileCode;  //  Variável que contém o código do arquivo para ser descomprimido
+    QString my_fileName;  //  Variável que contém o nome do arquivo para ser descomprimido
+    QByteArray my_treeCode;  //  Variável que contém a codifiação da arvore do arquivo para ser descomprimido
+    QByteArray my_finalOutPut;  //  Variável que contém a codifiação final do arquivo para ser descomprimido
 
     int s_Trash;
     int s_Tree;
     int s_Name;
 
     bool getBit(long long int pos);  //  Retorna o bit na posição indicada
-    bool HTree::getBit(long long int pos, QByteArray bytes);
-    void getSizeThings(QByteArray code);  //  Obtém todos os dados do arquivo
-    void setFileOut(); // Remonta o arquivo
+    void getSizeThings(QByteArray code);  //  Obtém todos os dados do arquivo e o remonta
 };
 
 #endif // HTREE_H

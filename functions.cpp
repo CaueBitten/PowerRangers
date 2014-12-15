@@ -121,8 +121,6 @@ void uncompression(QString nameFile, QString localOut)
         return;
     }
 
-    tree->setRoot(rebuildTree(tree->my_treeCode));
-    tree->setFileOut();
     localOut.append(tree->my_fileName);
 
     fileOut->rebuildFile(localOut, tree->my_finalOutPut);

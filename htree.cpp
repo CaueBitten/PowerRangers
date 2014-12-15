@@ -227,17 +227,6 @@ bool HTree::getBit(long long int pos)
     }
     return false;
 }
-bool HTree::getBit(long long int pos, QByteArray bytes)
-{
-    unsigned char byte = (unsigned char) bytes.at(pos/8);
-    unsigned char mask = 0x1;
-    mask = mask << (7 - pos%8);
-    byte = byte & mask;
-    if(byte){
-        return true;
-    }
-    return false;
-}
 
 void HTree::getSizeThings(QByteArray code)
 {
@@ -284,20 +273,4 @@ void HTree::getSizeThings(QByteArray code)
     }
 
 
-}
-
-void HTree::setFileOut(){
-    m_cursor = m_root;
-    for(long long int i = 0; i < my_preCode.size(); i++){
-        if((unsigned char)my_preCode.at(i) ==  '0'){
-            toLeft();
-        }
-        else if((unsigned char)my_preCode.at(i) == '1'){
-            toRight();
-        }
-        if(m_cursor->isLeaf()){
-            my_finalOutPut += (unsigned char)m_cursor->content;
-            m_cursor = m_root;
-        }
-    }
 }
